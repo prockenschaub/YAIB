@@ -216,16 +216,17 @@ def persist_shap_data(trainer: Trainer, log_dir: Path):
         trainer: Pytorch lightning trainer object
         log_dir: Log directory
     """
+    module = trainer.lightning_module
     try:
-        if trainer.lightning_module.test_shap_values is not None:
-            shap_values = trainer.lightning_module.test_shap_values
-            shaps_test = pl.DataFrame(schema=trainer.lightning_module.trained_columns, data=np.transpose(shap_values.values))
+        if hasattr(module, "test_shap_values") and module.test_shap_values is not None:
+            shap_values = module.test_shap_values
+            shaps_test = pl.DataFrame(schema=module.trained_columns, data=np.transpose(shap_values.values))
             with (log_dir / "shap_values_test.parquet").open("wb") as f:
                 shaps_test.write_parquet(f)
             logging.info(f"Saved shap values to {log_dir / 'test_shap_values.parquet'}")
-        if trainer.lightning_module.train_shap_values is not None:
-            shap_values = trainer.lightning_module.train_shap_values
-            shaps_train = pl.DataFrame(schema=trainer.lightning_module.trained_columns, data=np.transpose(shap_values.values))
+        if hasattr(module, "train_shap_values") and module.train_shap_values is not None:
+            shap_values = module.train_shap_values
+            shaps_train = pl.DataFrame(schema=module.trained_columns, data=np.transpose(shap_values.values))
             with (log_dir / "shap_values_train.parquet").open("wb") as f:
                 shaps_train.write_parquet(f)
 
