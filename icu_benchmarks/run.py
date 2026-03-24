@@ -4,7 +4,7 @@ import gin
 import logging
 import sys
 from pathlib import Path
-import torch.cuda
+import torch
 from icu_benchmarks.wandb_utils import update_wandb_config, apply_wandb_sweep, set_wandb_experiment_name
 from icu_benchmarks.tuning.hyperparameters import choose_and_bind_hyperparameters_optuna
 from scripts.plotting.utils import plot_aggregated_results
@@ -96,13 +96,15 @@ def main(my_args=tuple(sys.argv[1:])):
     )
     log_full_line(f"Logging to {log_dir}.", logging.INFO)
 
-    # Check cuda availability
+    # Check GPU availability
     if torch.cuda.is_available():
         for name in range(0, torch.cuda.device_count()):
             log_full_line(f"Available GPU {name}: {torch.cuda.get_device_name(name)}", level=logging.INFO)
+    elif torch.backends.mps.is_available():
+        log_full_line("MPS (Apple Silicon GPU) available.", level=logging.INFO)
     else:
         log_full_line(
-            "No GPUs available: please check your device and Torch,Cuda installation if unintended.", level=logging.WARNING
+            "No GPUs available: please check your device and Torch/CUDA/MPS installation if unintended.", level=logging.WARNING
         )
 
     if args.preprocessor:
