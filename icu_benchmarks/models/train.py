@@ -162,7 +162,7 @@ def train_common(
         min_epochs=1,  # We need at least one epoch to get results.
         callbacks=callbacks,
         precision=precision,
-        accelerator="auto" if not cpu else "cpu",
+        accelerator="auto" if (not cpu and model.requires_backprop) else "cpu",  # ML models don't need GPU
         devices=devices,
         deterministic="warn" if reproducible else False,
         benchmark=not reproducible,
