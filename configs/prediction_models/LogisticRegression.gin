@@ -12,7 +12,7 @@ model/hyperparameter.class_to_tune = @LogisticRegression
 model/hyperparameter.solver = "saga"
 model/hyperparameter.n_jobs = 8
 model/hyperparameter.max_iter = 100000
-model/hyperparameter.C = (1e-3, 1e1, "log-uniform")
+model/hyperparameter.C = (1e-3, 1e0, "log")
 model/hyperparameter.penalty = ["l1", "l2", "elasticnet"]
 model/hyperparameter.l1_ratio = (0.0, 1.0)
 
