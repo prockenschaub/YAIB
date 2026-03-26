@@ -179,7 +179,7 @@ def train_common(
         else:
             logging.info("Training ML model.")
             model.fit(train_dataset, val_dataset)
-            model.save_model(log_dir, "last")
+            model.save_model(log_dir, "model")
             logging.info("Training complete.")
     if train_only:
         logging.info("Finished training full model.")
