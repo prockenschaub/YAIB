@@ -252,7 +252,8 @@ def load_model(model, source_dir, pl_model=True) -> DLModel | MLModelClassifier 
                 model.load_from_checkpoint(checkpoint)
         else:
             model_path = source_dir / "model.joblib"
-            model = load(model_path)
+            model = model()
+            model.model = load(model_path)
     else:
         raise Exception(f"No weights to load at path : {source_dir}")
     logging.info(f"Loaded {type(model)} model from {model_path}")
