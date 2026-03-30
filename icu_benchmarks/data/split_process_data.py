@@ -384,7 +384,9 @@ def make_single_split_polars(
             )
 
         if train_size:
-            outer_cv = StratifiedShuffleSplit(cv_repetitions, train_size=train_size)
+            outer_cv = StratifiedShuffleSplit(cv_repetitions, train_size=train_size, random_state=seed)
+        elif cv_repetitions == 1:
+            outer_cv = StratifiedShuffleSplit(1, test_size=1/cv_folds, random_state=seed)
         else:
             outer_cv = StratifiedKFold(cv_repetitions, shuffle=True, random_state=seed)
 
@@ -396,7 +398,9 @@ def make_single_split_polars(
     else:
         # If there are no labels, or the task is regression, use regular k-fold.
         if train_size:
-            outer_cv = ShuffleSplit(cv_repetitions, train_size=train_size)
+            outer_cv = ShuffleSplit(cv_repetitions, train_size=train_size, random_state=seed)
+        elif cv_repetitions == 1:
+            outer_cv = ShuffleSplit(1, test_size=1/cv_folds, random_state=seed)
         else:
             outer_cv = KFold(cv_repetitions, shuffle=True, random_state=seed)
         inner_cv = KFold(cv_folds, shuffle=True, random_state=seed)
